@@ -1,0 +1,41 @@
+const mongoose = require('mongoose');
+
+const IndicateurSchema = new mongoose.Schema({
+  rendement: { type: Number, required: true },
+  couts: { type: Number, required: true },
+  qualiteSol: { type: String },
+  utilisationEau: { type: Number },
+});
+
+const QuestionnaireComparatifSchema = new mongoose.Schema({
+  nomProjet: {
+    type: String,
+    required: [true, 'Le nom du projet est requis'],
+    trim: true,
+  },
+  identifiantBeneficiaire: {
+    type: String,
+    required: [true, 'L\'identifiant du bénéficiaire est requis'],
+    unique: true,
+  },
+  dateEvaluation: {
+    type: Date,
+    default: Date.now,
+  },
+  situationAvant: {
+    type: IndicateurSchema,
+    required: true,
+  },
+  situationApres: {
+    type: IndicateurSchema,
+    required: true,
+  },
+  commentaires: {
+    type: String,
+    trim: true,
+  },
+}, {
+  timestamps: true,
+});
+
+module.exports = mongoose.model('QuestionnaireComparatif', QuestionnaireComparatifSchema);

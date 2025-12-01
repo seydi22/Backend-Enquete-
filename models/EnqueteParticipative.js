@@ -1,101 +1,113 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-// This sub-schema is for the list of participants in the identification section
-const ParticipantSchema = new Schema({
-    nomPrenom: { type: String, default: '' },
-    age: { type: String, default: '' },
-    sexe: { type: String, default: '' },
-    fonction: { type: String, default: '' },
-    contact: { type: String, default: '' },
-    parcelleDimension: { type: String, default: '' },
-    titreFoncier: { type: String, default: '' }
+// --- Sub-Schemas for Comparative Tables ---
+
+// 1. Spéculations cultivées (Speculations cultivées)
+const SpeculationCultiveeSchema = new Schema({
+    speculation: { type: String, default: '' },
+    avantProjet: { type: String, default: '' },
+    apresProjet: { type: String, default: '' },
+    changementObserve: { type: String, default: '' }
 }, { _id: false });
 
-// This sub-schema is for the 'difficulties and solutions' table
-const DifficulteSolutionSchema = new Schema({
-    difficulte: { type: String, default: '' },
-    solution: { type: String, default: '' }
+// 2. Fertilisation et pratiques culturales (Fertilisation Pratiques)
+const FertilisationPratiqueSchema = new Schema({
+    type: { type: String, default: '' }, // e.g., 'Utilisation d’engrais chimiques'
+    avantProjet: { type: String, default: '' },
+    apresProjet: { type: String, default: '' },
+    changementsObserves: { type: String, default: '' }
 }, { _id: false });
 
-// This is the main schema for the entire focus group survey
-const EnqueteParticipativeSchema = new Schema({
+// 3. Irrigation et gestion de l’eau (Irrigation Gestion Eau)
+const IrrigationGestionEauSchema = new Schema({
+    aspect: { type: String, default: '' }, // e.g., 'Source d’eau'
+    avantProjet: { type: String, default: '' },
+    apresProjet: { type: String, default: '' },
+    evolutionPercue: { type: String, default: '' }
+}, { _id: false });
+
+// 4. Rendement et production (Rendement Production)
+const RendementProductionSchema = new Schema({
+    culturePrincipale: { type: String, required: true },
+    rendementAvant: { type: String, required: true },
+    rendementApres: { type: String, required: true },
+    variation: { type: String, required: true },
+    facteursAmelioration: { type: String, required: true }
+}, { _id: false });
+
+// 5. Pratiques agroécologiques (Pratiques Agroecologiques)
+const PratiqueAgroecologiqueSchema = new Schema({
+    pratique: { type: String, default: '' }, // e.g., 'Compostage...'
+    avantProjet: { type: String, default: '' },
+    introduiteRenforcee: { type: String, default: '' },
+    impactObserve: { type: String, default: '' }
+}, { _id: false });
+
+
+// --- Main Schema for Formulaire Comparatif ---
+const ComparatifSchema = new Schema({
     identification: {
-        localite: { type: String, default: '' },
-        dateSeance: { type: String, default: '' },
-        compositionGroupe: { type: String, default: '' },
-        listeParticipants: [ParticipantSchema]
+        typeRepondant: { type: String, default: '' }, // 'groupement', 'individuel', 'fg'
+        
+        // Groupement fields
+        groupementNom: { type: String, default: '' },
+        groupementType: { type: String, default: '' },
+        groupementAutrePrecision: { type: String, default: '' },
+        
+        // Individuel fields
+        individuelNom: { type: String, default: '' },
+        individuelSexe: { type: String, default: '' },
+        individuelAge: { type: String, default: '' },
+        // NOTE: individuelGroupement field is present in state but not used in JSX
+        
+        // General status field
+        individuelStatut: { type: String, default: '' }, 
+        individuelStatutAutrePrecision: { type: String, default: '' },
+        
+        // Parcelle fields
+        parcelleStatut: { type: String, default: '' },
+        parcelleStatutAutrePrecision: { type: String, default: '' },
+        superficieExploitee: { type: String, default: '' }, // Used in 'individuel' section
+
+        // Focus Group (FG) fields
+        fgNombreFemmes: { type: String, default: '' },
+        fgNombreHommes: { type: String, default: '' },
+        fgJeunes: { type: String, default: '' },
+        
+        // NOTE: fertilisant, speculationPrincipale are in the state but not used in JSX
     },
-    pertinence: {
-        problematiquesAgricoles: { type: String, default: '' },
-        repondBesoinLocaux: { type: String, default: '' },
-        repondBesoinLocauxCommentaire: { type: String, default: '' },
-        implicationActeurs: { type: String, default: '' },
-        aspectsPertinents: { type: String, default: '' },
-        besoinsNonCouvert: { type: String, default: '' }
+
+    speculationsCultivees: [SpeculationCultiveeSchema],
+    speculationsCommentaires: { type: String, default: '' },
+
+    fertilisationPratiques: [FertilisationPratiqueSchema],
+
+    irrigationGestionEau: [IrrigationGestionEauSchema],
+
+    rendementProduction: [RendementProductionSchema],
+
+    pratiquesAgroecologiques: [PratiqueAgroecologiqueSchema],
+
+    impactGlobal: {
+        ameliorationsPratiquesAgricoles: { type: String, default: '' },
+        formationsBeneficie: { type: String, default: '' },
+        formationsTheme: { type: String, default: '' },
+        appreciationEncadrementTechnique: { type: String, default: '' },
+        contributionProductiviteRentabilite: { type: String, default: '' },
+        contributionCommercialisationProduction: { type: String, default: '' }, // New field
+        durabiliteChangementsIntroduits: { type: String, default: '' },
+        difficultesPersistantes: { type: String, default: '' },
+        recommandationsAgricultureDurable: { type: String, default: '' }
     },
-    efficacite: {
-        activitesRealiseesDelaisPlans: { type: String, default: '' },
-        activitesRealiseesCommentaire: { type: String, default: '' },
-        qualiteFormationsAppuis: { type: String, default: '' },
-        coordinationSatisfaisante: { type: String, default: '' },
-        coordinationCommentaire: { type: String, default: '' },
-        difficultesSolutions: [DifficulteSolutionSchema],
-        difficultesCommentaire: { type: String, default: '' }
+
+    syntheseObservations: {
+        observationsGenerales: { type: String, default: '' },
+        appreciationGlobaleEvolution: { type: String, default: '' },
+        signatures: { type: String, default: '' },
     },
-    efficience: {
-        ressourcesOptimales: { type: String, default: '' },
-        ressourcesOptimalesCommentaire: { type:String, default: '' },
-        gaspillagesRetardsDoublons: { type: String, default: '' },
-        gaspillagesRetardsDoublonsCommentaire: { type: String, default: '' },
-        mecanismesFavorables: { type: String, default: '' },
-        mecanismesFreinage: { type: String, default: '' }
-    },
-    resultatsImpacts: {
-        changementsProductionAgricole: { type: String, default: '' },
-        revenusConditionsVieEvolue: { type: String, default: '' },
-        revenusConditionsVieExemples: { type: String, default: '' },
-        capacitesTechniquesRenforcees: { type: String, default: '' },
-        capacitesTechniquesExemples: { type: String, default: '' },
-        innovationsBonnesPratiques: {
-            innovations: { type: String, default: '' },
-            bonnesPratiques: { type: String, default: '' }
-        },
-        beneficeFemmesJeunes: {
-            casFemmes: { type: String, default: '' },
-            casJeunes: { type: String, default: '' }
-        },
-        effetsIndirectsInattendus: {
-            positifsIndirects: { type: String, default: '' },
-            negatifsIndirects: { type: String, default: '' },
-            positifsInattendus: { type: String, default: '' },
-            negatifsInattendus: { type: String, default: '' }
-        }
-    },
-    durabilitePerspectives: {
-        acquisMaintenusFinancement: { type: String, default: '' },
-        acquisMaintenusCommentaire: { type: String, default: '' },
-        acteursLocauxMoyensNecessaires: { type: String, default: '' },
-        acteursLocauxMoyensNecessairesCommentaire: { type: String, default: '' },
-        partenariatsAppuisNecessaires: { type: String, default: '' },
-        recommandationsDurabilite: { type: String, default: '' }
-    },
-    gouvernanceParticipation: {
-        gestionParticipativeTransparente: { type: String, default: '' },
-        gestionParticipativeTransparenteCommentaire: { type: String, default: '' },
-        structuresLocalesRoleActif: { type: String, default: '' },
-        structuresLocalesRoleActifCommentaire: { type: String, default: '' },
-        mecanismesCommunicationSuivi: { type: String, default: '' },
-        mecanismesCommunicationSuiviCommentaire: { type: String, default: '' }
-    },
-    recommandationsParticipants: {
-        suggestionsAmeliorerProjet: { type: String, default: '' },
-        leconsExperienceCollective: { type: String, default: '' }
-    },
-    animateur: { type: String, default: '' },
-    dateAnimateur: { type: String, default: '' },
 }, {
-    timestamps: true, // This will add createdAt and updatedAt fields
+    timestamps: true,
 });
 
-module.exports = mongoose.model('EnqueteParticipative', EnqueteParticipativeSchema);
+module.exports = mongoose.model('Comparatif', ComparatifSchema);

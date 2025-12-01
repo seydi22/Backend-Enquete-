@@ -5,9 +5,11 @@ const QuestionnaireComparatif = require('../models/QuestionnaireComparatif');
 // @access  Public
 const createComparatif = async (req, res) => {
   try {
+    console.log('Received Comparatif data:', req.body); // Log incoming data
     const questionnaire = await QuestionnaireComparatif.create(req.body);
     res.status(201).json({ success: true, data: questionnaire });
   } catch (error) {
+    console.error('Error creating Comparatif:', error); // Log the error
     res.status(400).json({ success: false, error: error.message });
   }
 };

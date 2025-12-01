@@ -1,3 +1,4 @@
+
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
@@ -73,6 +74,7 @@ const QuestionnaireComparatifSchema = new Schema({
         formationsTheme: { type: String, default: '' },
         appreciationEncadrementTechnique: { type: String, default: '' },
         contributionProductiviteRentabilite: { type: String, default: '' },
+        contributionCommercialisationProduction: { type: String, default: '' }, // NOUVEAU CHAMP AJOUTÉ
         durabiliteChangementsIntroduits: { type: String, default: '' },
         difficultesPersistantes: { type: String, default: '' },
         recommandationsAgricultureDurable: { type: String, default: '' }

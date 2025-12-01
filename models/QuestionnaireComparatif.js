@@ -1,8 +1,7 @@
-
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-// --- Sub-schemas for arrays used in the main form ---
+// --- Sous-schémas inchangés (ils sont corrects) ---
 
 const SpeculationCultiveeSchema = new Schema({
     speculation: { type: String, default: '' },
@@ -41,7 +40,7 @@ const PratiqueAgroecologiqueSchema = new Schema({
 }, { _id: false });
 
 
-// --- Main Schema for the Comparative Questionnaire ---
+// --- Schéma Principal du Questionnaire Comparatif (avec correction) ---
 
 const QuestionnaireComparatifSchema = new Schema({
     identification: {
@@ -55,6 +54,11 @@ const QuestionnaireComparatifSchema = new Schema({
         individuelGroupement: { type: String, default: '' },
         individuelStatut: { type: String, default: '' },
         individuelStatutAutrePrecision: { type: String, default: '' },
+        
+        // CORRECTION : Ajout des deux champs manquants pour le statut de la parcelle
+        parcelleStatut: { type: String, default: '' }, 
+        parcelleStatutAutrePrecision: { type: String, default: '' }, 
+        
         fgNombreFemmes: { type: String, default: '' },
         fgNombreHommes: { type: String, default: '' },
         fgJeunes: { type: String, default: '' },
@@ -74,7 +78,7 @@ const QuestionnaireComparatifSchema = new Schema({
         formationsTheme: { type: String, default: '' },
         appreciationEncadrementTechnique: { type: String, default: '' },
         contributionProductiviteRentabilite: { type: String, default: '' },
-        contributionCommercialisationProduction: { type: String, default: '' }, // NOUVEAU CHAMP AJOUTÉ
+        contributionCommercialisationProduction: { type: String, default: '' },
         durabiliteChangementsIntroduits: { type: String, default: '' },
         difficultesPersistantes: { type: String, default: '' },
         recommandationsAgricultureDurable: { type: String, default: '' }
@@ -85,7 +89,7 @@ const QuestionnaireComparatifSchema = new Schema({
         signatures: { type: String, default: '' }
     },
 }, {
-    timestamps: true // Adds createdAt and updatedAt fields
+    timestamps: true
 });
 
 module.exports = mongoose.model('QuestionnaireComparatif', QuestionnaireComparatifSchema);

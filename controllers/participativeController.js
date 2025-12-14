@@ -245,7 +245,6 @@ const exportParticipatives = async (req, res) => {
     );
 
     await workbook.xlsx.write(res);
-    res.status(200).end();
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

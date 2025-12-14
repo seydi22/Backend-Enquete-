@@ -5,6 +5,7 @@ const {
   getComparatifById,
   updateComparatif,
   deleteComparatif,
+  exportComparatifs,
 } = require('../controllers/comparatifController');
 
 const router = express.Router();
@@ -13,6 +14,8 @@ router
   .route('/')
   .post(createComparatif)
   .get(getComparatifs);
+
+router.route('/export').get(exportComparatifs);
 
 router
   .route('/:id')
